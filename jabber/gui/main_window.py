@@ -13,6 +13,7 @@ class MainWindow(MWBase, MWForm):
         self.setupUi(self)
         self._connect_signals()
         self._img_fnames = list()
+        self._img_idx = -1
 
     def _connect_signals(self):
         """
@@ -42,3 +43,14 @@ class MainWindow(MWBase, MWForm):
 
         # sort the file names
         self._img_fnames = sorted(self._img_fnames)
+        self._next_img()
+
+    def _next_img(self):
+        """
+        Load the next image
+        """
+        try:
+            self._img_idx += 1
+            self.image.load_img(self._img_fnames[self._img_idx])
+        except IndexError:
+            logger.warning('no images to display')
