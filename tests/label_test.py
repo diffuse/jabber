@@ -1,3 +1,4 @@
+import json
 import os
 import unittest
 from jabber.label import Labeler
@@ -23,3 +24,13 @@ class LabelerTest(unittest.TestCase):
             self.labeler.add_label(fname, label)
 
         self.assertEqual(self.labeler._labels, expected)
+
+    def test_save_SavesLabels(self):
+        labels = {'foo.jpg': ['foo', 'bar']}
+
+        self.labeler._labels = labels
+        self.labeler.save()
+
+        with open(self.label_fname, 'r') as f:
+            lines = f.read()
+            self.assertEqual(json.loads(lines), labels)

@@ -1,3 +1,6 @@
+import json
+
+
 class Labeler:
     def __init__(self, fname):
         """
@@ -22,3 +25,13 @@ class Labeler:
             self._labels[img_fname] = list()
 
         self._labels[img_fname].append(label)
+
+    def save(self):
+        """
+        Save labels to self._fname as JSON
+        """
+        labels_json = json.dumps(self._labels)
+
+        with open(self._fname, 'w') as f:
+            f.writelines(labels_json)
+            f.flush()
