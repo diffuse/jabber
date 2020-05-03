@@ -2,7 +2,7 @@ import glob
 import logging
 import os
 from jabber.gui import MWBase, MWForm
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5 import QtCore, QtWidgets
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class MainWindow(MWBase, MWForm):
         Get a list of image files with known
         extensions from user-chosen path
         """
-        path = QFileDialog.getExistingDirectory(self, 'Select directory containing images to label')
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select directory containing images to label')
 
         # check the path
         if not path:
@@ -51,6 +51,38 @@ class MainWindow(MWBase, MWForm):
         """
         try:
             self._img_idx += 1
+
+            # wrap around if necessary
+            if self._img_idx >= len(self._img_fnames):
+                self._img_idx = 0
+
             self.image.load_img(self._img_fnames[self._img_idx])
         except IndexError:
             logger.warning('no images to display')
+
+    def _prev_img(self):
+        """
+        Load the previous image
+        """
+        try:
+            self._img_idx -= 1
+
+            # wrap around if necessary
+            if self._img_idx < 0:
+                self._img_idx = len(self._img_fnames) - 1
+
+            self.image.load_img(self._img_fnames[self._img_idx])
+        except IndexError:
+            logger.warning('no images to display')
+
+    def keyPressEvent(self, e):
+        """
+        Move to the next or previous image
+        based on key presses
+
+        :param e: The key press event
+        """
+        if e.key() == QtCore.Qt.Key_Right:
+            self._next_img()
+        elif e.key() == QtCore.Qt.Key_Left:
+            self._prev_img()
