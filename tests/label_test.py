@@ -32,8 +32,7 @@ class LabelerTest(unittest.TestCase):
         self.labeler.save()
 
         with open(self.label_fname, 'r') as f:
-            lines = f.read()
-            self.assertEqual(json.loads(lines), labels)
+            self.assertEqual(json.load(f), labels)
 
     def test_init_LoadsExistingLabels(self):
         # save labels with one labeler

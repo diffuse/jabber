@@ -16,7 +16,7 @@ class Labeler:
 
         try:
             with open(self._fname, 'r') as f:
-                self._labels = json.loads(f.read())
+                self._labels = json.load(f)
         except json.JSONDecodeError as e:
             logger.warning(f'could not load existing labels in {fname}')
         except OSError:
@@ -41,8 +41,6 @@ class Labeler:
         """
         Save labels to self._fname as JSON
         """
-        labels_json = json.dumps(self._labels)
-
         with open(self._fname, 'w') as f:
-            f.writelines(labels_json)
+            json.dump(self._labels, f)
             f.flush()
