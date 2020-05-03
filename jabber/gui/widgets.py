@@ -1,5 +1,5 @@
 import logging
-from jabber.gui import ImgBase, ImgForm
+from jabber.gui import ImgBase, ImgForm, ImgListBase, ImgListForm
 from PyQt5 import QtCore, QtGui
 
 logger = logging.getLogger(__name__)
@@ -40,3 +40,34 @@ class ImageWidget(ImgBase, ImgForm):
         """
         if self._current_fname:
             self.load_img(self._current_fname)
+
+
+class ImageListWidget(ImgListBase, ImgListForm):
+    fname_selected = QtCore.pyqtSignal(str)
+
+    def __init__(self, parent):
+        super(self.__class__, self).__init__(parent)
+        self.setupUi(self)
+        self.list.itemClicked.connect(self._fname_selected)
+
+    def add_items(self, items):
+        """
+        Add list of items to list widget
+
+        :param items: The list of items to add
+        """
+        self.list.addItems(items)
+
+    def set_idx(self, idx):
+        """
+        Highlight the fname at this index
+
+        :param idx: The index/row of the fname to enable highlighting on
+        """
+        self.list.setCurrentRow(idx)
+
+    def _fname_selected(self, fname):
+        """
+        Signal for a filename being selected
+        """
+        self.fname_selected.emit(fname.text())
