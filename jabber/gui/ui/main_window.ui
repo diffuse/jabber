@@ -14,9 +14,12 @@
    <string>Jabber</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,2">
     <item>
      <widget class="ImageWidget" name="image" native="true"/>
+    </item>
+    <item>
+     <widget class="ImageListWidget" name="fname_list" native="true"/>
     </item>
    </layout>
   </widget>
@@ -47,6 +50,12 @@
  <customwidgets>
   <customwidget>
    <class>ImageWidget</class>
+   <extends>QWidget</extends>
+   <header>jabber/gui/widgets</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImageListWidget</class>
    <extends>QWidget</extends>
    <header>jabber/gui/widgets</header>
    <container>1</container>

@@ -43,6 +43,7 @@ class MainWindow(MWBase, MWForm):
 
         # sort the file names
         self._img_fnames = sorted(self._img_fnames)
+        self.fname_list.add_items(self._img_fnames)
         self._next_img()
 
     def _next_img(self):
@@ -57,6 +58,7 @@ class MainWindow(MWBase, MWForm):
                 self._img_idx = 0
 
             self.image.load_img(self._img_fnames[self._img_idx])
+            self.fname_list.set_idx(self._img_idx)
         except IndexError:
             logger.warning('no images to display')
 
@@ -72,6 +74,7 @@ class MainWindow(MWBase, MWForm):
                 self._img_idx = len(self._img_fnames) - 1
 
             self.image.load_img(self._img_fnames[self._img_idx])
+            self.fname_list.set_idx(self._img_idx)
         except IndexError:
             logger.warning('no images to display')
 
