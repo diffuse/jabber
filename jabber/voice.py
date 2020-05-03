@@ -12,9 +12,14 @@ class Listener:
         :param ambient_sample_secs: The number of seconds to sample to adjust for ambient noise
         """
         self._mic = sr.Microphone()
-        self._recognizer = sr.Recognizer()
 
-        logger.info('adjusting for ambient noise')
+        # configure recognizer to pick up short words/phrases
+        self._recognizer = sr.Recognizer()
+        self._recognizer.pause_threshold = 0.4
+        self._recognizer.phrase_threshold = 0.3
+        self._recognizer.non_speaking_duration = 0.3
+
+        logger.info(f'listening for {ambient_sample_secs}s to adjust for ambient noise')
         with self._mic as source:
             self._recognizer.adjust_for_ambient_noise(source, ambient_sample_secs)
 
