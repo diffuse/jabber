@@ -3,6 +3,7 @@ import logging
 import os
 from jabber.gui import MWBase, MWForm
 from jabber.label import Labeler
+from jabber.voice import Listener
 from PyQt5 import QtCore, QtWidgets
 
 logger = logging.getLogger(__name__)
@@ -18,8 +19,9 @@ class MainWindow(MWBase, MWForm):
         self._img_fnames = list()
         self._img_idx = -1
 
-        # labels
+        # labeling
         self._labeler = None
+        self._listener = Listener()
 
     def _connect_signals(self):
         """
@@ -114,10 +116,28 @@ class MainWindow(MWBase, MWForm):
         self._img_idx = self._img_fnames.index(fname)
         self.image.load_img(fname)
 
+    def _label_with_speech(self):
+        """
+        Convert speech to text and use each word
+        in the text as a label
+        """
+        # convert speech to labels
+        self.statusbar.showMessage('listening for classification labels')
+        labels = self._listener.get_words()
+        self.statusbar.clearMessage()
+
+        # make sure the labeler exists
+        if not self._labeler:
+            self._get_labels_fname()
+
+        # add labels
+        for label in labels:
+            self._labeler.add_label(self._img_fnames[self._img_idx], label)
+            self._labeler.save()
+
     def keyPressEvent(self, e):
         """
-        Move to the next or previous image
-        based on key presses
+        Perform actions based on key presses
 
         :param e: The key press event
         """
@@ -125,3 +145,8 @@ class MainWindow(MWBase, MWForm):
             self._next_img()
         elif e.key() == QtCore.Qt.Key_Left:
             self._prev_img()
+        elif e.key() == QtCore.Qt.Key_Control:
+            # only begin labeling if there are images
+            if self._img_fnames:
+                self._label_with_speech()
+                self._next_img()
