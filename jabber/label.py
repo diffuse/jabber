@@ -1,4 +1,7 @@
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Labeler:
@@ -10,6 +13,14 @@ class Labeler:
         """
         self._fname = fname
         self._labels = dict()
+
+        try:
+            with open(self._fname, 'r') as f:
+                self._labels = json.loads(f.read())
+        except json.JSONDecodeError as e:
+            logger.warning(f'could not load existing labels in {fname}')
+        except OSError:
+            pass
 
     def add_label(self, img_fname, label):
         """
