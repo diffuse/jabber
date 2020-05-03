@@ -37,6 +37,7 @@
      <string>File</string>
     </property>
     <addaction name="action_open"/>
+    <addaction name="action_set_labels_file"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -44,6 +45,11 @@
   <action name="action_open">
    <property name="text">
     <string>&amp;Open</string>
+   </property>
+  </action>
+  <action name="action_set_labels_file">
+   <property name="text">
+    <string>Set labels file</string>
    </property>
   </action>
  </widget>
