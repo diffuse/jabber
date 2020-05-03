@@ -2,6 +2,7 @@ import glob
 import logging
 import os
 from jabber.gui import MWBase, MWForm
+from jabber.label import Labeler
 from PyQt5 import QtCore, QtWidgets
 
 logger = logging.getLogger(__name__)
@@ -12,14 +13,20 @@ class MainWindow(MWBase, MWForm):
         super(self.__class__, self).__init__()
         self.setupUi(self)
         self._connect_signals()
+
+        # images
         self._img_fnames = list()
         self._img_idx = -1
+
+        # labels
+        self._labeler = None
 
     def _connect_signals(self):
         """
         Connect signals to the appropriate slots
         """
         self.action_open.triggered.connect(self._get_input_files)
+        self.action_set_labels_file.triggered.connect(self._get_labels_fname)
         self.fname_list.fname_selected.connect(self._jump_to_img)
 
     def _get_input_files(self):
@@ -27,7 +34,10 @@ class MainWindow(MWBase, MWForm):
         Get a list of image files with known
         extensions from user-chosen path
         """
-        path = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select directory containing images to label')
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            self,
+            'Select directory containing images to label',
+            options=QtWidgets.QFileDialog.DontUseNativeDialog)
 
         # check the path
         if not path:
@@ -46,6 +56,22 @@ class MainWindow(MWBase, MWForm):
         self._img_fnames = sorted(self._img_fnames)
         self.fname_list.add_items(self._img_fnames)
         self._next_img()
+
+    def _get_labels_fname(self):
+        """
+        Get a filename to save labels with
+        """
+        labels_fname, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self,
+            'Select filename to save labels to',
+            filter='json(*.json)',
+            options=QtWidgets.QFileDialog.DontConfirmOverwrite | QtWidgets.QFileDialog.DontUseNativeDialog)
+
+        if not labels_fname:
+            logger.warning('no labels filename provided')
+            return
+
+        self._labeler = Labeler(f'{labels_fname}.json')
 
     def _next_img(self):
         """
