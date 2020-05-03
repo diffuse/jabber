@@ -20,6 +20,7 @@ class MainWindow(MWBase, MWForm):
         Connect signals to the appropriate slots
         """
         self.action_open.triggered.connect(self._get_input_files)
+        self.fname_list.fname_selected.connect(self._jump_to_img)
 
     def _get_input_files(self):
         """
@@ -77,6 +78,15 @@ class MainWindow(MWBase, MWForm):
             self.fname_list.set_idx(self._img_idx)
         except IndexError:
             logger.warning('no images to display')
+
+    def _jump_to_img(self, fname):
+        """
+        Load/jump to the file fname
+
+        :param fname: The name of the file to jump to
+        """
+        self._img_idx = self._img_fnames.index(fname)
+        self.image.load_img(fname)
 
     def keyPressEvent(self, e):
         """

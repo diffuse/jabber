@@ -43,9 +43,12 @@ class ImageWidget(ImgBase, ImgForm):
 
 
 class ImageListWidget(ImgListBase, ImgListForm):
+    fname_selected = QtCore.pyqtSignal(str)
+
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
+        self.list.itemClicked.connect(self._fname_selected)
 
     def add_items(self, items):
         """
@@ -62,3 +65,9 @@ class ImageListWidget(ImgListBase, ImgListForm):
         :param idx: The index/row of the fname to enable highlighting on
         """
         self.list.setCurrentRow(idx)
+
+    def _fname_selected(self, fname):
+        """
+        Signal for a filename being selected
+        """
+        self.fname_selected.emit(fname.text())
