@@ -1,11 +1,11 @@
 import logging
-from jabber.gui import ImgBase, ImgForm, ImgListBase, ImgListForm, MicBase, MicForm
+from jabber import gui as gui
 from PyQt5 import QtCore, QtGui
 
 logger = logging.getLogger(__name__)
 
 
-class ImageWidget(ImgBase, ImgForm):
+class ImageWidget(gui.ImgBase, gui.ImgForm):
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
@@ -42,7 +42,7 @@ class ImageWidget(ImgBase, ImgForm):
             self.load_img(self._current_fname)
 
 
-class ImageListWidget(ImgListBase, ImgListForm):
+class ImageListWidget(gui.ImgListBase, gui.ImgListForm):
     fname_selected = QtCore.pyqtSignal(str)
 
     def __init__(self, parent):
@@ -73,7 +73,27 @@ class ImageListWidget(ImgListBase, ImgListForm):
         self.fname_selected.emit(fname.text())
 
 
-class MicWidget(MicBase, MicForm):
+class MicWidget(gui.MicBase, gui.MicForm):
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
+
+
+class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
+    def __init__(self, parent):
+        super(self.__class__, self).__init__(parent)
+        self.setupUi(self)
+
+    def add_items(self, items):
+        """
+        Add list of items to list widget
+
+        :param items: The list of items to add
+        """
+        self.list.addItems(items)
+
+    def clear(self):
+        """
+        Clear the list
+        """
+        self.list.clear()

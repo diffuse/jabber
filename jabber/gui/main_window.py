@@ -82,6 +82,9 @@ class MainWindow(MWBase, MWForm):
         """
         Load the next image
         """
+        # clear current labels
+        self.current_labels.clear()
+
         try:
             self._img_idx += 1
 
@@ -98,6 +101,9 @@ class MainWindow(MWBase, MWForm):
         """
         Load the previous image
         """
+        # clear current labels
+        self.current_labels.clear()
+
         try:
             self._img_idx -= 1
 
@@ -138,6 +144,9 @@ class MainWindow(MWBase, MWForm):
             self._labeler.add_label(self._img_fnames[self._img_idx], label)
             self._labeler.save()
 
+        # show labels for this image
+        self.current_labels.add_items(labels)
+
     def keyPressEvent(self, e):
         """
         Perform actions based on key presses
@@ -152,4 +161,3 @@ class MainWindow(MWBase, MWForm):
             # only begin labeling if there are images
             if self._img_fnames:
                 self._label_with_speech()
-                self._next_img()
