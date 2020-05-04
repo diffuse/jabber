@@ -25,6 +25,10 @@ class MainWindow(MWBase, MWForm):
         # signals
         self._connect_signals()
 
+        # configure event handling
+        self.installEventFilter(self)
+        self.fname_list.setFocusPolicy(QtCore.Qt.StrongFocus)
+
     def _connect_signals(self):
         """
         Connect signals to the appropriate slots
@@ -164,17 +168,32 @@ class MainWindow(MWBase, MWForm):
         self.current_labels.add_items(labels)
         self._refresh_classes()
 
-    def keyPressEvent(self, e):
+    def _key_pressed(self, e):
         """
-        Perform actions based on key presses
+        Perform actions based on key press
 
-        :param e: The key press event
+        :param e: The event
         """
-        if e.key() == QtCore.Qt.Key_Right:
+        key = e.key()
+
+        if key == QtCore.Qt.Key_Right or key == QtCore.Qt.Key_Down:
             self._next_img()
-        elif e.key() == QtCore.Qt.Key_Left:
+        elif key == QtCore.Qt.Key_Left or key == QtCore.Qt.Key_Up:
             self._prev_img()
-        elif e.key() == QtCore.Qt.Key_Control:
+        elif key == QtCore.Qt.Key_Control:
             # only begin labeling if there are images
             if self._img_fnames:
                 self._label_with_speech()
+
+    def eventFilter(self, source, event):
+        """
+        Process an event
+
+        :param source: The event source
+        :param event: The event
+        """
+        if event.type() == QtCore.QEvent.KeyPress:
+            self._key_pressed(event)
+            return True
+
+        return super(self.__class__, self).eventFilter(source, event)
