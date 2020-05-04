@@ -48,6 +48,7 @@ class ImageListWidget(gui.ImgListBase, gui.ImgListForm):
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
+        self.list.setSortingEnabled(True)
         self.list.itemClicked.connect(self._fname_selected)
 
     def add_items(self, items):

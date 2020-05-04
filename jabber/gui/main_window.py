@@ -28,6 +28,8 @@ class MainWindow(MWBase, MWForm):
         # configure event handling
         self.installEventFilter(self)
         self.fname_list.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.current_labels.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.classes.setFocusPolicy(QtCore.Qt.StrongFocus)
 
     def _connect_signals(self):
         """
