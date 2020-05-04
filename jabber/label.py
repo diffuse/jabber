@@ -22,6 +22,22 @@ class Labeler:
         except OSError:
             pass
 
+    def get_labels(self, img_fname):
+        """
+        Get labels associated with this image
+
+        :param img_fname: The image filename
+        :return: The list of labels associated with this image
+        """
+        labels = list()
+
+        try:
+            labels = self._labels[img_fname]
+        except KeyError:
+            pass
+
+        return labels
+
     def add_label(self, img_fname, label):
         """
         Associate a label with an image filename

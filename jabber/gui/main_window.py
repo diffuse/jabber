@@ -87,8 +87,14 @@ class MainWindow(MWBase, MWForm):
         self.current_labels.clear()
 
         try:
-            self.image.load_img(self._img_fnames[self._img_idx])
+            img_fname = self._img_fnames[self._img_idx]
+
+            self.image.load_img(img_fname)
             self.fname_list.set_idx(self._img_idx)
+
+            if self._labeler:
+                labels = self._labeler.get_labels(img_fname)
+                self.current_labels.add_items(labels)
         except IndexError:
             logger.warning('no images to display')
 
@@ -123,7 +129,7 @@ class MainWindow(MWBase, MWForm):
         :param fname: The name of the file to jump to
         """
         self._img_idx = self._img_fnames.index(fname)
-        self.image.load_img(fname)
+        self._load()
 
     def _label_with_speech(self):
         """

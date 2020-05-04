@@ -6,7 +6,7 @@ class TestVoice(TestCase):
     def setUp(self):
         with mock.patch('speech_recognition.Microphone', autospec=True):
             with mock.patch('speech_recognition.Recognizer', autospec=True):
-                self.listener = voice.Listener(ambient_sample_secs=0)
+                self.listener = voice.Listener()
 
     def test_getWords_GetsWords(self):
         stt = 'these are some test labels'

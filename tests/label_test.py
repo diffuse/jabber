@@ -15,6 +15,16 @@ class LabelerTest(unittest.TestCase):
         except OSError:
             pass
 
+    def test_getLabels_GetsLabels(self):
+        fname = 'foo.jpg'
+        labels = ['bar', 'bar1']
+        self.labeler._labels = {fname: labels}
+
+        self.assertEqual(self.labeler.get_labels(fname), labels)
+
+    def test_getLabels_WithMissingFname_GetsEmptyList(self):
+        self.assertEqual(self.labeler.get_labels(''), [])
+
     def test_addLabel_AddsLabels(self):
         fname = 'foo.jpg'
         labels = ['bar', 'bar1']
