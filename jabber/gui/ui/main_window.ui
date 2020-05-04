@@ -6,20 +6,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>957</width>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Jabber</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,2">
+   <layout class="QVBoxLayout" name="verticalLayout_6" stretch="9,1">
     <item>
-     <widget class="ImageWidget" name="image" native="true"/>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,2">
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Image</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="ImageWidget" name="image" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string>File list</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="ImageListWidget" name="fname_list" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
-     <widget class="ImageListWidget" name="fname_list" native="true"/>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Microphone</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="MicWidget" name="mic_control" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -28,7 +62,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>957</width>
      <height>20</height>
     </rect>
    </property>
@@ -62,6 +96,12 @@
   </customwidget>
   <customwidget>
    <class>ImageListWidget</class>
+   <extends>QWidget</extends>
+   <header>jabber/gui/widgets</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MicWidget</class>
    <extends>QWidget</extends>
    <header>jabber/gui/widgets</header>
    <container>1</container>

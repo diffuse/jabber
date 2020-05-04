@@ -1,5 +1,5 @@
 import logging
-from jabber.gui import ImgBase, ImgForm, ImgListBase, ImgListForm
+from jabber.gui import ImgBase, ImgForm, ImgListBase, ImgListForm, MicBase, MicForm
 from PyQt5 import QtCore, QtGui
 
 logger = logging.getLogger(__name__)
@@ -71,3 +71,9 @@ class ImageListWidget(ImgListBase, ImgListForm):
         Signal for a filename being selected
         """
         self.fname_selected.emit(fname.text())
+
+
+class MicWidget(MicBase, MicForm):
+    def __init__(self, parent):
+        super(self.__class__, self).__init__(parent)
+        self.setupUi(self)
