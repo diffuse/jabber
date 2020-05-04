@@ -14,7 +14,7 @@
    <string>Jabber</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3" stretch="8,2">
+   <layout class="QVBoxLayout" name="verticalLayout_6" stretch="8,2">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,2">
       <item>
@@ -44,7 +44,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="7,3">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,4,2">
       <item>
        <widget class="QGroupBox" name="groupBox_4">
         <property name="title">
@@ -53,6 +53,18 @@
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="ClassListWidget" name="current_labels" native="true"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="title">
+         <string>Classes</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="ClassListWidget" name="classes" native="true"/>
          </item>
         </layout>
        </widget>
