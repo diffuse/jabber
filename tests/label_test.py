@@ -35,6 +35,14 @@ class LabelerTest(unittest.TestCase):
 
         self.assertEqual(self.labeler._labels, expected)
 
+    def test_addLabel_UpdatesClassSet(self):
+        classes = {'bar', 'bar1'}
+
+        for label in classes:
+            self.labeler.add_label('', label)
+
+        self.assertEqual(self.labeler.get_classes(), classes)
+
     def test_save_SavesLabels(self):
         labels = {'foo.jpg': ['foo', 'bar']}
 

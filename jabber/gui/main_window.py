@@ -78,13 +78,23 @@ class MainWindow(MWBase, MWForm):
 
         self._labeler = Labeler(f'{labels_fname}.json')
 
+    def _refresh_classes(self):
+        """
+        Make sure the class list is current
+        """
+        self.classes.clear()
+
+        if self._labeler:
+            self.classes.add_items(self._labeler.get_classes())
+
     def _load(self):
         """
         Load image at self._img_idx and handle
         related state changes
         """
-        # clear current labels
+        # clear current labels and refresh class list
         self.current_labels.clear()
+        self._refresh_classes()
 
         try:
             img_fname = self._img_fnames[self._img_idx]
@@ -152,6 +162,7 @@ class MainWindow(MWBase, MWForm):
 
         # show labels for this image
         self.current_labels.add_items(labels)
+        self._refresh_classes()
 
     def keyPressEvent(self, e):
         """

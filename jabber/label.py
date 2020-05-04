@@ -13,6 +13,7 @@ class Labeler:
         """
         self._fname = fname
         self._labels = dict()
+        self._classes = set()
 
         try:
             with open(self._fname, 'r') as f:
@@ -38,6 +39,14 @@ class Labeler:
 
         return labels
 
+    def get_classes(self):
+        """
+        Get all unique classes
+
+        :return: A set of all unique classes
+        """
+        return self._classes
+
     def add_label(self, img_fname, label):
         """
         Associate a label with an image filename
@@ -52,6 +61,7 @@ class Labeler:
             self._labels[img_fname] = list()
 
         self._labels[img_fname].append(label)
+        self._classes.add(label)
 
     def save(self):
         """
