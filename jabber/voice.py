@@ -5,12 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 class Listener:
-    def __init__(self, ambient_sample_secs=2):
-        """
-        Init Listener
-
-        :param ambient_sample_secs: The number of seconds to sample to adjust for ambient noise
-        """
+    def __init__(self):
         self._mic = sr.Microphone()
 
         # configure recognizer to pick up short words/phrases
@@ -19,9 +14,17 @@ class Listener:
         self._recognizer.phrase_threshold = 0.3
         self._recognizer.non_speaking_duration = 0.3
 
-        logger.info(f'listening for {ambient_sample_secs}s to adjust for ambient noise')
+        self.adjust_for_ambient_noise()
+
+    def adjust_for_ambient_noise(self, sample_secs=2):
+        """
+        Adjust recognizer for ambient sound
+
+        :param sample_secs: The number of seconds to sample to adjust for ambient noise
+        """
+        logger.info(f'listening for {sample_secs}s to adjust for ambient noise')
         with self._mic as source:
-            self._recognizer.adjust_for_ambient_noise(source, ambient_sample_secs)
+            self._recognizer.adjust_for_ambient_noise(source, sample_secs)
 
     def get_words(self):
         """

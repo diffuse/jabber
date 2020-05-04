@@ -13,7 +13,6 @@ class MainWindow(MWBase, MWForm):
     def __init__(self):
         super(self.__class__, self).__init__()
         self.setupUi(self)
-        self._connect_signals()
 
         # images
         self._img_fnames = list()
@@ -23,6 +22,9 @@ class MainWindow(MWBase, MWForm):
         self._labeler = None
         self._listener = Listener()
 
+        # signals
+        self._connect_signals()
+
     def _connect_signals(self):
         """
         Connect signals to the appropriate slots
@@ -30,6 +32,7 @@ class MainWindow(MWBase, MWForm):
         self.action_open.triggered.connect(self._get_input_files)
         self.action_set_labels_file.triggered.connect(self._get_labels_fname)
         self.fname_list.fname_selected.connect(self._jump_to_img)
+        self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
 
     def _get_input_files(self):
         """
