@@ -78,43 +78,43 @@ class MainWindow(MWBase, MWForm):
 
         self._labeler = Labeler(f'{labels_fname}.json')
 
-    def _next_img(self):
+    def _load(self):
         """
-        Load the next image
+        Load image at self._img_idx and handle
+        related state changes
         """
         # clear current labels
         self.current_labels.clear()
 
         try:
-            self._img_idx += 1
-
-            # wrap around if necessary
-            if self._img_idx >= len(self._img_fnames):
-                self._img_idx = 0
-
             self.image.load_img(self._img_fnames[self._img_idx])
             self.fname_list.set_idx(self._img_idx)
         except IndexError:
             logger.warning('no images to display')
+
+    def _next_img(self):
+        """
+        Load the next image
+        """
+        self._img_idx += 1
+
+        # wrap around if necessary
+        if self._img_idx >= len(self._img_fnames):
+            self._img_idx = 0
+
+        self._load()
 
     def _prev_img(self):
         """
         Load the previous image
         """
-        # clear current labels
-        self.current_labels.clear()
+        self._img_idx -= 1
 
-        try:
-            self._img_idx -= 1
+        # wrap around if necessary
+        if self._img_idx < 0:
+            self._img_idx = len(self._img_fnames) - 1
 
-            # wrap around if necessary
-            if self._img_idx < 0:
-                self._img_idx = len(self._img_fnames) - 1
-
-            self.image.load_img(self._img_fnames[self._img_idx])
-            self.fname_list.set_idx(self._img_idx)
-        except IndexError:
-            logger.warning('no images to display')
+        self._load()
 
     def _jump_to_img(self, fname):
         """
