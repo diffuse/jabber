@@ -33,7 +33,7 @@ class Labeler:
         labels = list()
 
         try:
-            labels = self._labels[img_fname]
+            labels = list(self._labels[img_fname])
         except KeyError:
             pass
 
@@ -58,15 +58,18 @@ class Labeler:
         :param label: The label
         """
         if img_fname not in self._labels:
-            self._labels[img_fname] = list()
+            self._labels[img_fname] = set()
 
-        self._labels[img_fname].append(label)
+        self._labels[img_fname].add(label)
         self._classes.add(label)
 
     def save(self):
         """
         Save labels to self._fname as JSON
         """
+        # convert sets to lists
+        labels = {fname: list(s) for fname, s in self._labels.items()}
+
         with open(self._fname, 'w') as f:
-            json.dump(self._labels, f, indent=4, sort_keys=True)
+            json.dump(labels, f, indent=4, sort_keys=True)
             f.flush()
