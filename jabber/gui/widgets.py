@@ -82,10 +82,13 @@ class MicWidget(gui.MicBase, gui.MicForm):
 
 class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
     item_deleted = QtCore.pyqtSignal(str)
+    item_double_clicked = QtCore.pyqtSignal(str)
 
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
+        self.list.setSortingEnabled(True)
+        self.list.itemDoubleClicked.connect(lambda item: self.item_double_clicked.emit(item.text()))
 
     def add_items(self, items):
         """

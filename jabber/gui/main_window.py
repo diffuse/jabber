@@ -40,6 +40,7 @@ class MainWindow(MWBase, MWForm):
         self.fname_list.fname_selected.connect(self._jump_to_img)
         self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
         self.current_labels.item_deleted.connect(self._delete_label)
+        self.classes.item_double_clicked.connect(self._add_label)
 
     def _get_input_files(self):
         """
@@ -85,6 +86,35 @@ class MainWindow(MWBase, MWForm):
 
         self._labeler = Labeler(f'{labels_fname}.json')
         self._load()
+
+    def _add_label(self, label, save=True, refresh_class_list=True):
+        """
+        Add a label to the current image
+
+        :param label: The label to add
+        :param save: Flag to save labels after adding
+        :param refresh_class_list: Flag to clear and repopulate class list after adding
+        """
+        # make sure the labeler exists
+        if not self._labeler:
+            self._get_labels_fname()
+
+        try:
+            # add the label
+            img_fname = self._img_fnames[self._img_idx]
+            self._labeler.add_label(img_fname, label)
+
+            if save:
+                self._labeler.save()
+
+            # show labels for this image and refresh class lists
+            self.current_labels.clear()
+            self.current_labels.add_items(self._labeler.get_labels(img_fname))
+
+            if refresh_class_list:
+                self._refresh_classes()
+        except IndexError:
+            pass
 
     def _delete_label(self, label):
         """
@@ -173,18 +203,9 @@ class MainWindow(MWBase, MWForm):
         labels = self._listener.get_words()
         self.statusbar.clearMessage()
 
-        # make sure the labeler exists
-        if not self._labeler:
-            self._get_labels_fname()
-
         # add labels
         for label in labels:
-            self._labeler.add_label(self._img_fnames[self._img_idx], label)
-            self._labeler.save()
-
-        # show labels for this image
-        self.current_labels.add_items(labels)
-        self._refresh_classes()
+            self._add_label(label)
 
     def _key_pressed(self, e):
         """

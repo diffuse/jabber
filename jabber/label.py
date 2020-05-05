@@ -20,8 +20,11 @@ class Labeler:
             with open(self._fname, 'r') as f:
                 self._labels = json.load(f)
 
-                # populate the class set
-                for labels in self._labels.values():
+                # populate the class set and convert label lists to sets
+                for fname, labels in self._labels.items():
+                    if type(labels) == list:
+                        self._labels[fname] = set(labels)
+
                     self._classes.update(labels)
 
         except json.JSONDecodeError:

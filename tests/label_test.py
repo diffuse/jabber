@@ -91,7 +91,7 @@ class LabelerTest(unittest.TestCase):
 
         # load them with another
         labeler = Labeler(self.label_fname)
-        self.assertEqual(labeler._labels, expected)
+        self.assertEqual(labeler._labels, {fname: labels})
         self.assertEqual(labeler._classes, labels)
 
     def test_init_HandlesEmptyFilename(self):
