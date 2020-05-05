@@ -81,6 +81,8 @@ class MicWidget(gui.MicBase, gui.MicForm):
 
 
 class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
+    item_deleted = QtCore.pyqtSignal(str)
+
     def __init__(self, parent):
         super(self.__class__, self).__init__(parent)
         self.setupUi(self)
@@ -98,3 +100,17 @@ class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
         Clear the list
         """
         self.list.clear()
+
+    def keyPressEvent(self, e):
+        """
+        Perform actions based on key press
+
+        :param e: The event
+        """
+        key = e.key()
+
+        if key == QtCore.Qt.Key_Delete:
+            for item in self.list.selectedItems():
+                self.item_deleted.emit(item.text())
+                self.list.takeItem(self.list.row(item))
+

@@ -51,6 +51,24 @@ class LabelerTest(unittest.TestCase):
 
         self.assertEqual(self.labeler.get_classes(), classes)
 
+    def test_deleteLabel_DeletesLabel(self):
+        fname = 'foo.jpg'
+        labels = {'bar', 'bar1'}
+
+        self.labeler._labels = {fname: labels}
+        self.labeler.delete_label(fname, 'bar')
+
+        self.assertEqual(self.labeler._labels[fname], {'bar1'})
+
+    def test_deleteLabel_WithBadArgs_Ignores(self):
+        fname = 'foo.jpg'
+        labels = {'bar', 'bar1'}
+        self.labeler._labels = {fname: labels}
+        self.labeler.delete_label('not a filename', 'bar')
+        self.labeler.delete_label('foo.jpg', 'not a label')
+
+        self.assertEqual(self.labeler._labels[fname], labels)
+
     def test_save_SavesLabels(self):
         fname = 'foo.jpg'
         labels = {'foo', 'bar'}

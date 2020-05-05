@@ -63,6 +63,19 @@ class Labeler:
         self._labels[img_fname].add(label)
         self._classes.add(label)
 
+    def delete_label(self, img_fname, label):
+        """
+        Delete a label associated with an image filename
+
+        :param img_fname: The image filename this label is associated with
+        :param label: The label to delete
+        """
+        # TODO handle removing/keeping with class set
+        try:
+            self._labels[img_fname].remove(label)
+        except (AttributeError, KeyError):
+            logger.error(f'could not delete label {label} associated with img {img_fname}')
+
     def save(self):
         """
         Save labels to self._fname as JSON

@@ -39,6 +39,7 @@ class MainWindow(MWBase, MWForm):
         self.action_set_labels_file.triggered.connect(self._get_labels_fname)
         self.fname_list.fname_selected.connect(self._jump_to_img)
         self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
+        self.current_labels.item_deleted.connect(self._delete_label)
 
     def _get_input_files(self):
         """
@@ -83,6 +84,21 @@ class MainWindow(MWBase, MWForm):
             return
 
         self._labeler = Labeler(f'{labels_fname}.json')
+        self._load()
+
+    def _delete_label(self, label):
+        """
+        Delete a label associated with the current image
+
+        :param label: The label to delete
+        """
+        try:
+            img_fname = self._img_fnames[self._img_idx]
+
+            if self._labeler:
+                self._labeler.delete_label(img_fname, label)
+        except IndexError:
+            pass
 
     def _refresh_classes(self):
         """
