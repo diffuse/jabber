@@ -16,8 +16,14 @@ class Labeler:
         self._classes = set()
 
         try:
+            # load the labels
             with open(self._fname, 'r') as f:
                 self._labels = json.load(f)
+
+                # populate the class set
+                for labels in self._labels.values():
+                    self._classes.update(labels)
+
         except json.JSONDecodeError:
             logger.warning(f'could not load existing labels in {fname}')
         except OSError:
