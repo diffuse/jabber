@@ -84,7 +84,10 @@ class MainWindow(MWBase, MWForm):
             logger.warning('no labels filename provided')
             return
 
-        self._labeler = Labeler(f'{labels_fname}.json')
+        if not labels_fname.lower().endswith('.json'):
+            labels_fname += '.json'
+
+        self._labeler = Labeler(labels_fname)
         self._load()
 
     def _add_label(self, label, save=True, refresh_class_list=True):
