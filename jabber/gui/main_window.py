@@ -27,6 +27,9 @@ class MainWindow(MWBase, MWForm):
 
         # configure event handling
         self.installEventFilter(self)
+
+        # set focus policies
+        self.image.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.fname_list.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.current_labels.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.classes.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -84,7 +87,10 @@ class MainWindow(MWBase, MWForm):
             logger.warning('no labels filename provided')
             return
 
-        self._labeler = Labeler(f'{labels_fname}.json')
+        if not labels_fname.lower().endswith('.json'):
+            labels_fname += '.json'
+
+        self._labeler = Labeler(labels_fname)
         self._load()
 
     def _add_label(self, label, save=True, refresh_class_list=True):
@@ -96,7 +102,7 @@ class MainWindow(MWBase, MWForm):
         :param refresh_class_list: Flag to clear and repopulate class list after adding
         """
         # make sure the labeler exists
-        if not self._labeler:
+        while not self._labeler:
             self._get_labels_fname()
 
         try:
