@@ -13,14 +13,48 @@ class Labeler:
         """
         self._fname = fname
         self._labels = dict()
+        self._classes = set()
 
         try:
+            # load the labels
             with open(self._fname, 'r') as f:
                 self._labels = json.load(f)
+
+                # populate the class set and convert label lists to sets
+                for fname, labels in self._labels.items():
+                    if type(labels) == list:
+                        self._labels[fname] = set(labels)
+
+                    self._classes.update(labels)
+
         except json.JSONDecodeError:
             logger.warning(f'could not load existing labels in {fname}')
         except OSError:
             pass
+
+    def get_labels(self, img_fname):
+        """
+        Get labels associated with this image
+
+        :param img_fname: The image filename
+        :return: The list of labels associated with this image
+        """
+        labels = list()
+
+        try:
+            labels = list(self._labels[img_fname])
+        except KeyError:
+            pass
+
+        return labels
+
+    def get_classes(self):
+        """
+        Get all unique classes
+
+        :return: A set of all unique classes
+        """
+        return self._classes
 
     def add_label(self, img_fname, label):
         """
@@ -33,14 +67,31 @@ class Labeler:
         :param label: The label
         """
         if img_fname not in self._labels:
-            self._labels[img_fname] = list()
+            self._labels[img_fname] = set()
 
-        self._labels[img_fname].append(label)
+        self._labels[img_fname].add(label)
+        self._classes.add(label)
+
+    def delete_label(self, img_fname, label):
+        """
+        Delete a label associated with an image filename
+
+        :param img_fname: The image filename this label is associated with
+        :param label: The label to delete
+        """
+        # TODO handle removing/keeping with class set
+        try:
+            self._labels[img_fname].remove(label)
+        except (AttributeError, KeyError):
+            logger.error(f'could not delete label {label} associated with img {img_fname}')
 
     def save(self):
         """
         Save labels to self._fname as JSON
         """
+        # convert sets to lists
+        labels = {fname: list(s) for fname, s in self._labels.items()}
+
         with open(self._fname, 'w') as f:
-            json.dump(self._labels, f, indent=4, sort_keys=True)
+            json.dump(labels, f, indent=4, sort_keys=True)
             f.flush()

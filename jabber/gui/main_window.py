@@ -25,6 +25,12 @@ class MainWindow(MWBase, MWForm):
         # signals
         self._connect_signals()
 
+        # configure event handling
+        self.installEventFilter(self)
+        self.fname_list.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.current_labels.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.classes.setFocusPolicy(QtCore.Qt.StrongFocus)
+
     def _connect_signals(self):
         """
         Connect signals to the appropriate slots
@@ -33,6 +39,8 @@ class MainWindow(MWBase, MWForm):
         self.action_set_labels_file.triggered.connect(self._get_labels_fname)
         self.fname_list.fname_selected.connect(self._jump_to_img)
         self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
+        self.current_labels.item_deleted.connect(self._delete_label)
+        self.classes.item_double_clicked.connect(self._add_label)
 
     def _get_input_files(self):
         """
@@ -77,38 +85,104 @@ class MainWindow(MWBase, MWForm):
             return
 
         self._labeler = Labeler(f'{labels_fname}.json')
+        self._load()
+
+    def _add_label(self, label, save=True, refresh_class_list=True):
+        """
+        Add a label to the current image
+
+        :param label: The label to add
+        :param save: Flag to save labels after adding
+        :param refresh_class_list: Flag to clear and repopulate class list after adding
+        """
+        # make sure the labeler exists
+        if not self._labeler:
+            self._get_labels_fname()
+
+        try:
+            # add the label
+            img_fname = self._img_fnames[self._img_idx]
+            self._labeler.add_label(img_fname, label)
+
+            if save:
+                self._labeler.save()
+
+            # show labels for this image and refresh class lists
+            self.current_labels.clear()
+            self.current_labels.add_items(self._labeler.get_labels(img_fname))
+
+            if refresh_class_list:
+                self._refresh_classes()
+        except IndexError:
+            pass
+
+    def _delete_label(self, label):
+        """
+        Delete a label associated with the current image
+
+        :param label: The label to delete
+        """
+        try:
+            img_fname = self._img_fnames[self._img_idx]
+
+            if self._labeler:
+                self._labeler.delete_label(img_fname, label)
+        except IndexError:
+            pass
+
+    def _refresh_classes(self):
+        """
+        Make sure the class list is current
+        """
+        self.classes.clear()
+
+        if self._labeler:
+            self.classes.add_items(self._labeler.get_classes())
+
+    def _load(self):
+        """
+        Load image at self._img_idx and handle
+        related state changes
+        """
+        # clear current labels and refresh class list
+        self.current_labels.clear()
+        self._refresh_classes()
+
+        try:
+            img_fname = self._img_fnames[self._img_idx]
+
+            self.image.load_img(img_fname)
+            self.fname_list.set_idx(self._img_idx)
+
+            if self._labeler:
+                labels = self._labeler.get_labels(img_fname)
+                self.current_labels.add_items(labels)
+        except IndexError:
+            logger.warning('no images to display')
 
     def _next_img(self):
         """
         Load the next image
         """
-        try:
-            self._img_idx += 1
+        self._img_idx += 1
 
-            # wrap around if necessary
-            if self._img_idx >= len(self._img_fnames):
-                self._img_idx = 0
+        # wrap around if necessary
+        if self._img_idx >= len(self._img_fnames):
+            self._img_idx = 0
 
-            self.image.load_img(self._img_fnames[self._img_idx])
-            self.fname_list.set_idx(self._img_idx)
-        except IndexError:
-            logger.warning('no images to display')
+        self._load()
 
     def _prev_img(self):
         """
         Load the previous image
         """
-        try:
-            self._img_idx -= 1
+        self._img_idx -= 1
 
-            # wrap around if necessary
-            if self._img_idx < 0:
-                self._img_idx = len(self._img_fnames) - 1
+        # wrap around if necessary
+        if self._img_idx < 0:
+            self._img_idx = len(self._img_fnames) - 1
 
-            self.image.load_img(self._img_fnames[self._img_idx])
-            self.fname_list.set_idx(self._img_idx)
-        except IndexError:
-            logger.warning('no images to display')
+        self._load()
 
     def _jump_to_img(self, fname):
         """
@@ -117,7 +191,7 @@ class MainWindow(MWBase, MWForm):
         :param fname: The name of the file to jump to
         """
         self._img_idx = self._img_fnames.index(fname)
-        self.image.load_img(fname)
+        self._load()
 
     def _label_with_speech(self):
         """
@@ -129,27 +203,36 @@ class MainWindow(MWBase, MWForm):
         labels = self._listener.get_words()
         self.statusbar.clearMessage()
 
-        # make sure the labeler exists
-        if not self._labeler:
-            self._get_labels_fname()
-
         # add labels
         for label in labels:
-            self._labeler.add_label(self._img_fnames[self._img_idx], label)
-            self._labeler.save()
+            self._add_label(label)
 
-    def keyPressEvent(self, e):
+    def _key_pressed(self, e):
         """
-        Perform actions based on key presses
+        Perform actions based on key press
 
-        :param e: The key press event
+        :param e: The event
         """
-        if e.key() == QtCore.Qt.Key_Right:
+        key = e.key()
+
+        if key == QtCore.Qt.Key_Right or key == QtCore.Qt.Key_Down:
             self._next_img()
-        elif e.key() == QtCore.Qt.Key_Left:
+        elif key == QtCore.Qt.Key_Left or key == QtCore.Qt.Key_Up:
             self._prev_img()
-        elif e.key() == QtCore.Qt.Key_Control:
+        elif key == QtCore.Qt.Key_Control:
             # only begin labeling if there are images
             if self._img_fnames:
                 self._label_with_speech()
-                self._next_img()
+
+    def eventFilter(self, source, event):
+        """
+        Process an event
+
+        :param source: The event source
+        :param event: The event
+        """
+        if event.type() == QtCore.QEvent.KeyPress:
+            self._key_pressed(event)
+            return True
+
+        return super(self.__class__, self).eventFilter(source, event)
