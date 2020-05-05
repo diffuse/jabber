@@ -72,6 +72,14 @@ class Labeler:
         self._labels[img_fname].add(label)
         self._classes.add(label)
 
+    def add_class(self, class_name):
+        """
+        Add a class
+
+        :param class_name: The class to add
+        """
+        self._classes.add(class_name)
+
     def delete_label(self, img_fname, label):
         """
         Delete a label associated with an image filename

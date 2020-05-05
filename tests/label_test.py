@@ -51,6 +51,13 @@ class LabelerTest(unittest.TestCase):
 
         self.assertEqual(self.labeler.get_classes(), classes)
 
+    def test_addClass_AddsClass(self):
+        test_class = 'test'
+
+        self.labeler.add_class(test_class)
+
+        self.assertEqual(self.labeler._classes, {test_class})
+
     def test_deleteLabel_DeletesLabel(self):
         fname = 'foo.jpg'
         labels = {'bar', 'bar1'}
