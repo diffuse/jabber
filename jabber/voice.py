@@ -26,23 +26,27 @@ class Listener:
         with self._mic as source:
             self._recognizer.adjust_for_ambient_noise(source, sample_secs)
 
-    def get_words(self):
+    def get_words(self, timeout=1.0):
         """
         Return all words recorded in the
         last listen interval
 
+        :param timeout: The time, in seconds, to wait before ending listen period
         :return: The list recorded words
         """
         words = list()
-        audio = None
-
-        with self._mic as source:
-            audio = self._recognizer.listen(source)
 
         try:
+            audio = None
+
+            with self._mic as source:
+                audio = self._recognizer.listen(source, timeout=timeout)
+
             if audio:
                 words = self._recognizer.recognize_sphinx(audio).split()
+        except sr.WaitTimeoutError:
+            logger.error('timed out waiting for speech')
         except sr.UnknownValueError:
-            logging.error('could not understand speech')
+            logger.error('could not understand speech')
 
         return words
