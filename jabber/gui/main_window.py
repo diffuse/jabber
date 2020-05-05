@@ -27,6 +27,9 @@ class MainWindow(MWBase, MWForm):
 
         # configure event handling
         self.installEventFilter(self)
+
+        # set focus policies
+        self.image.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.fname_list.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.current_labels.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.classes.setFocusPolicy(QtCore.Qt.StrongFocus)
