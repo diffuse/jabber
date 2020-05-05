@@ -96,7 +96,7 @@ class MainWindow(MWBase, MWForm):
         :param refresh_class_list: Flag to clear and repopulate class list after adding
         """
         # make sure the labeler exists
-        if not self._labeler:
+        while not self._labeler:
             self._get_labels_fname()
 
         try:
