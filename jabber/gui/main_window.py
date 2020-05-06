@@ -268,9 +268,9 @@ class MainWindow(MWBase, MWForm):
         key = e.key()
         text = e.text()
 
-        if key == QtCore.Qt.Key_Right or key == QtCore.Qt.Key_Down:
+        if key in [QtCore.Qt.Key_Right, QtCore.Qt.Key_Down, QtCore.Qt.Key_Return]:
             self._next_img()
-        elif key == QtCore.Qt.Key_Left or key == QtCore.Qt.Key_Up:
+        elif key in [QtCore.Qt.Key_Left, QtCore.Qt.Key_Up]:
             self._prev_img()
         elif key == QtCore.Qt.Key_Control:
             # only begin labeling if there are images
