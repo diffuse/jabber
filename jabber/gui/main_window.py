@@ -25,8 +25,8 @@ class MainWindow(MWBase, MWForm):
         # signals
         self._connect_signals()
 
-        # configure event handling
-        self.installEventFilter(self)
+        # event filtering handling
+        self.image.installEventFilter(self)
 
         # set focus policies
         self.image.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -253,6 +253,7 @@ class MainWindow(MWBase, MWForm):
         :param e: The event
         """
         key = e.key()
+        text = e.text()
 
         if key == QtCore.Qt.Key_Right or key == QtCore.Qt.Key_Down:
             self._next_img()
@@ -262,6 +263,12 @@ class MainWindow(MWBase, MWForm):
             # only begin labeling if there are images
             if self._img_fnames:
                 self._label_with_speech()
+        elif text.isalpha() or text.isspace():
+            if self._labeler:
+                match = self._labeler.match_class(text)
+
+                if match:
+                    self._add_label(match)
 
     def eventFilter(self, source, event):
         """
