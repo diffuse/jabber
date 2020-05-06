@@ -44,6 +44,8 @@ class MainWindow(MWBase, MWForm):
         self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
         self.current_labels.item_deleted.connect(self._delete_label)
         self.classes.item_double_clicked.connect(self._add_label)
+        self.classes.item_deleted.connect(self._delete_class)
+        self.class_entry.returnPressed.connect(self._add_class_from_entry)
 
     def _get_input_files(self):
         """
@@ -122,6 +124,28 @@ class MainWindow(MWBase, MWForm):
         except IndexError:
             pass
 
+    def _add_class(self, class_name):
+        """
+        Add a class to the labeler
+
+        :param class_name: The class to add
+        """
+        # make sure the labeler exists
+        while not self._labeler:
+            self._get_labels_fname()
+
+        # add the class
+        self._labeler.add_class(class_name)
+        self._refresh_classes()
+
+    def _add_class_from_entry(self):
+        """
+        Convenience method to add class from line edit
+        """
+        class_name = self.class_entry.text()
+        self._add_class(class_name)
+        self.class_entry.clear()
+
     def _delete_label(self, label):
         """
         Delete a label associated with the current image
@@ -136,13 +160,21 @@ class MainWindow(MWBase, MWForm):
         except IndexError:
             pass
 
+    def _delete_class(self, class_name):
+        """
+        Delete a class associated with the labeler
+
+        :param class_name: The class to delete
+        """
+        if self._labeler:
+            self._labeler.delete_class(class_name)
+
     def _refresh_classes(self):
         """
         Make sure the class list is current
         """
-        self.classes.clear()
-
         if self._labeler:
+            self.classes.clear()
             self.classes.add_items(self._labeler.get_classes())
 
     def _load(self):
