@@ -76,6 +76,30 @@ class LabelerTest(unittest.TestCase):
 
         self.assertEqual(self.labeler._labels[fname], labels)
 
+    def test_deleteClass_DeletesClass(self):
+        classes = {'foo', 'bar'}
+
+        self.labeler._classes = classes
+        self.labeler.delete_class('foo')
+
+        self.assertEqual(self.labeler._classes, {'bar'})
+
+    def test_deleteClass_DoesntDeleteClassWhenStillInUse(self):
+        classes = {'foo', 'bar'}
+
+        self.labeler._labels = {'test.jpg': classes}
+        self.labeler._classes = classes
+        self.labeler.delete_class('foo')
+
+        self.assertEqual(self.labeler._classes, classes)
+
+    def test_deleteClass_WithBadArgs_Ignores(self):
+        classes = {'foo', 'bar'}
+        self.labeler._classes = classes
+        self.labeler.delete_class('not a class')
+
+        self.assertEqual(self.labeler._classes, classes)
+
     def test_save_SavesLabels(self):
         fname = 'foo.jpg'
         labels = {'foo', 'bar'}

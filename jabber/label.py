@@ -87,11 +87,27 @@ class Labeler:
         :param img_fname: The image filename this label is associated with
         :param label: The label to delete
         """
-        # TODO handle removing/keeping with class set
         try:
             self._labels[img_fname].remove(label)
         except (AttributeError, KeyError):
             logger.error(f'could not delete label {label} associated with img {img_fname}')
+
+    def delete_class(self, class_name):
+        """
+        Delete a class
+
+        :param class_name: The class to delete
+        """
+        try:
+            # don't delete it if it's still a label somewhere
+            for labels in self._labels.values():
+                if class_name in labels:
+                    logger.error(f'could not delete class {class_name}, it is still being used as a label')
+                    return
+
+            self._classes.remove(class_name)
+        except KeyError:
+            logger.error(f'could not delete class {class_name}')
 
     def save(self):
         """
