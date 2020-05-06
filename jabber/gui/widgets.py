@@ -114,6 +114,6 @@ class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
 
         if key == QtCore.Qt.Key_Delete:
             for item in self.list.selectedItems():
-                self.item_deleted.emit(item.text())
                 self.list.takeItem(self.list.row(item))
+                self.item_deleted.emit(item.text())
 

@@ -168,6 +168,7 @@ class MainWindow(MWBase, MWForm):
         """
         if self._labeler:
             self._labeler.delete_class(class_name)
+            self._refresh_classes()
 
     def _refresh_classes(self):
         """
