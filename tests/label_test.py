@@ -58,6 +58,29 @@ class LabelerTest(unittest.TestCase):
 
         self.assertEqual(self.labeler._classes, {test_class})
 
+    def test_matchClass_MatchesClass(self):
+        self.labeler._classes = {'foo', 'bar', 'bar1', 'spam and', 'spam and eggs'}
+
+        test_cases = [
+            (['f'], 'foo'),
+            (['b', 'a', 'r', ' '], 'bar'),
+            (['b', 'a', 'r', '1'], 'bar1'),
+            (['b', 'f'], ''),
+            (['b', 'f', 'f'], 'foo'),
+            (['b', ''], ''),
+            (['b', ' '], ''),
+            (['k', 'foo'], 'foo'),
+            (['s', 'p', 'a', 'm', ' ', 'a', 'n', 'd', ' ', 'e'], 'spam and eggs'),
+        ]
+
+        for keystrokes, expected in test_cases:
+            last_result = ''
+
+            for keystroke in keystrokes:
+                last_result = self.labeler.match_class(keystroke)
+
+            self.assertEqual(last_result, expected)
+
     def test_deleteLabel_DeletesLabel(self):
         fname = 'foo.jpg'
         labels = {'bar', 'bar1'}

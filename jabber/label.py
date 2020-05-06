@@ -14,6 +14,7 @@ class Labeler:
         self._fname = fname
         self._labels = dict()
         self._classes = set()
+        self._keystrokes = list()
 
         try:
             # load the labels
@@ -79,6 +80,46 @@ class Labeler:
         :param class_name: The class to add
         """
         self._classes.add(class_name)
+
+    def match_class(self, key):
+        """
+        Add the key to the persistent keystroke buffer
+        and compare to class set; return the appropriate
+        class if the string created from the keystroke
+        buffer has an unambiguous match
+
+        If there is an running match with two strings that terminate
+        differently (e.g. 'foo' -> ['foo', 'foo1']), the shorter string
+        must be terminated with a space to match
+
+        :param key: They key to create or add to the candidate string
+        :return: class if matched, empty string otherwise
+        """
+        self._keystrokes.append(key)
+        candidate = ''.join(self._keystrokes)
+        matches = [c for c in self._classes if c.startswith(candidate.rstrip())]
+
+        # unambiguous match
+        if len(matches) == 1:
+            self._keystrokes.clear()
+            return matches[0]
+        # potentially ambiguous match
+        elif len(matches) > 1:
+            # unsolvable without a space (e.g. 'ba' -> ['bar', 'baz'])
+            if not candidate.endswith(' '):
+                return ''
+            # solvable if ending in space and a full match (e.g. 'bar ' -> ['bar', 'bar1'], choose 'bar')
+            elif len(candidate) in [len(m.rstrip()) for m in matches]:
+                self._keystrokes.clear()
+                return min(matches, key=len)
+            # not solvable yet
+            else:
+                return ''
+        # no matches
+        else:
+            self._keystrokes.clear()
+
+        return ''
 
     def delete_label(self, img_fname, label):
         """

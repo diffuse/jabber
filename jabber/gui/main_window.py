@@ -25,8 +25,8 @@ class MainWindow(MWBase, MWForm):
         # signals
         self._connect_signals()
 
-        # configure event handling
-        self.installEventFilter(self)
+        # event filtering handling
+        self.image.installEventFilter(self)
 
         # set focus policies
         self.image.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -168,6 +168,7 @@ class MainWindow(MWBase, MWForm):
         """
         if self._labeler:
             self._labeler.delete_class(class_name)
+            self._refresh_classes()
 
     def _refresh_classes(self):
         """
@@ -245,6 +246,19 @@ class MainWindow(MWBase, MWForm):
         for label in labels:
             self._add_label(label)
 
+    def _label_with_keystrokes(self, keystroke):
+        """
+        Try to match user keystrokes to existing classes
+        and add a label if successful match found
+
+        :param keystroke: The keystroke to use in matching
+        """
+        if self._labeler:
+            match = self._labeler.match_class(keystroke)
+
+            if match:
+                self._add_label(match)
+
     def _key_pressed(self, e):
         """
         Perform actions based on key press
@@ -252,15 +266,18 @@ class MainWindow(MWBase, MWForm):
         :param e: The event
         """
         key = e.key()
+        text = e.text()
 
-        if key == QtCore.Qt.Key_Right or key == QtCore.Qt.Key_Down:
+        if key in [QtCore.Qt.Key_Right, QtCore.Qt.Key_Down, QtCore.Qt.Key_Return]:
             self._next_img()
-        elif key == QtCore.Qt.Key_Left or key == QtCore.Qt.Key_Up:
+        elif key in [QtCore.Qt.Key_Left, QtCore.Qt.Key_Up]:
             self._prev_img()
         elif key == QtCore.Qt.Key_Control:
             # only begin labeling if there are images
             if self._img_fnames:
                 self._label_with_speech()
+        elif text.isalpha() or text.isspace():
+            self._label_with_keystrokes(text)
 
     def eventFilter(self, source, event):
         """
