@@ -246,6 +246,19 @@ class MainWindow(MWBase, MWForm):
         for label in labels:
             self._add_label(label)
 
+    def _label_with_keystrokes(self, keystroke):
+        """
+        Try to match user keystrokes to existing classes
+        and add a label if successful match found
+
+        :param keystroke: The keystroke to use in matching
+        """
+        if self._labeler:
+            match = self._labeler.match_class(keystroke)
+
+            if match:
+                self._add_label(match)
+
     def _key_pressed(self, e):
         """
         Perform actions based on key press
@@ -264,11 +277,7 @@ class MainWindow(MWBase, MWForm):
             if self._img_fnames:
                 self._label_with_speech()
         elif text.isalpha() or text.isspace():
-            if self._labeler:
-                match = self._labeler.match_class(text)
-
-                if match:
-                    self._add_label(match)
+            self._label_with_keystrokes(text)
 
     def eventFilter(self, source, event):
         """
