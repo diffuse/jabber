@@ -1,2 +1,2 @@
 # jabber
-Label data using your voice
+Label single or multiclass data with minimal keystrokes

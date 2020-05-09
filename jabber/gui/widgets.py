@@ -74,12 +74,6 @@ class ImageListWidget(gui.ImgListBase, gui.ImgListForm):
         self.fname_selected.emit(fname.text())
 
 
-class MicWidget(gui.MicBase, gui.MicForm):
-    def __init__(self, parent):
-        super(self.__class__, self).__init__(parent)
-        self.setupUi(self)
-
-
 class ClassListWidget(gui.ClassListBase, gui.ClassListForm):
     item_deleted = QtCore.pyqtSignal(str)
     item_double_clicked = QtCore.pyqtSignal(str)

@@ -3,7 +3,6 @@ import logging
 import os
 from jabber.gui import MWBase, MWForm
 from jabber.label import Labeler
-from jabber.voice import Listener
 from PyQt5 import QtCore, QtWidgets
 
 logger = logging.getLogger(__name__)
@@ -20,7 +19,6 @@ class MainWindow(MWBase, MWForm):
 
         # labeling
         self._labeler = None
-        self._listener = Listener()
 
         # signals
         self._connect_signals()
@@ -41,7 +39,6 @@ class MainWindow(MWBase, MWForm):
         self.action_open.triggered.connect(self._get_input_files)
         self.action_set_labels_file.triggered.connect(self._get_labels_fname)
         self.fname_list.fname_selected.connect(self._jump_to_img)
-        self.mic_control.ambience_btn.clicked.connect(lambda: self._listener.adjust_for_ambient_noise())
         self.current_labels.item_deleted.connect(self._delete_label)
         self.classes.item_double_clicked.connect(self._add_label)
         self.classes.item_deleted.connect(self._delete_class)
@@ -232,20 +229,6 @@ class MainWindow(MWBase, MWForm):
         self._img_idx = self._img_fnames.index(fname)
         self._load()
 
-    def _label_with_speech(self):
-        """
-        Convert speech to text and use each word
-        in the text as a label
-        """
-        # convert speech to labels
-        self.statusbar.showMessage('listening for classification labels')
-        labels = self._listener.get_words()
-        self.statusbar.clearMessage()
-
-        # add labels
-        for label in labels:
-            self._add_label(label)
-
     def _label_with_keystrokes(self, keystroke):
         """
         Try to match user keystrokes to existing classes
@@ -272,10 +255,6 @@ class MainWindow(MWBase, MWForm):
             self._next_img()
         elif key in [QtCore.Qt.Key_Left, QtCore.Qt.Key_Up]:
             self._prev_img()
-        elif key == QtCore.Qt.Key_Control:
-            # only begin labeling if there are images
-            if self._img_fnames:
-                self._label_with_speech()
         elif text.isalpha() or text.isspace():
             self._label_with_keystrokes(text)
 
