@@ -57,6 +57,13 @@ class Labeler:
         """
         return self._classes
 
+    def get_keystrokes(self):
+        """
+        Return a string of the keystrokes
+        currently in the buffer
+        """
+        return ''.join(self._keystrokes)
+
     def add_label(self, img_fname, label):
         """
         Associate a label with an image filename
@@ -120,6 +127,12 @@ class Labeler:
             self._keystrokes.clear()
 
         return ''
+
+    def reset_matching(self):
+        """
+        Clear the keystroke buffer to reset matching
+        """
+        self._keystrokes.clear()
 
     def delete_label(self, img_fname, label):
         """

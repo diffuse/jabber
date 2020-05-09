@@ -25,6 +25,18 @@ class LabelerTest(unittest.TestCase):
     def test_getLabels_WithMissingFname_GetsEmptyList(self):
         self.assertEqual(self.labeler.get_labels(''), [])
 
+    def test_getKeystrokes_GetsKeystrokeString(self):
+        keystrokes = ['f', 'o', 'o']
+        self.labeler._keystrokes = keystrokes
+
+        self.assertEqual(self.labeler.get_keystrokes(), 'foo')
+
+    def test_getKeystrokes_WithEmptyList_GetsEmptyString(self):
+        keystrokes = list()
+        self.labeler._keystrokes = keystrokes
+
+        self.assertEqual(self.labeler.get_keystrokes(), '')
+
     def test_addLabel_AddsLabels(self):
         fname = 'foo.jpg'
         labels = {'bar', 'bar1'}
@@ -80,6 +92,11 @@ class LabelerTest(unittest.TestCase):
                 last_result = self.labeler.match_class(keystroke)
 
             self.assertEqual(last_result, expected)
+
+    def test_resetMatching_ResetsMatching(self):
+        self.labeler._keystrokes = ['foo', 'bar']
+        self.labeler.reset_matching()
+        self.assertEqual(len(self.labeler._keystrokes), 0)
 
     def test_deleteLabel_DeletesLabel(self):
         fname = 'foo.jpg'

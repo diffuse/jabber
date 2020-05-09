@@ -64,7 +64,8 @@ To generate these labels, all the user had to type was `a` `d` `p`, then `↵` t
 ![Screenshot](docs/images/eagle-labeled.png)
 
 Again, to generate these labels, all the user had to type was `a` `b` `e`, then `↵` to move to the next image.  Labels
-are automatically saved to your selected labels file when added.
+can also be added by double clicking class names.  Your labels file will automatically be updated/saved when you add or
+delete labels.
 
 ### Notes on class naming
 If there are class names that begin with similar letters (`bat` and `bird`), matching will still work, but 
@@ -73,12 +74,15 @@ needed for a match.  It is a good idea to name your classes with unique starting
 number of keystrokes you have to type.
 
 ### Navigation reference
-You can navigate between images with the following keys:
+You can navigate between images with the following keys, or by clicking on any filename in the file list:
 ```
 →, ↓, or ↵: next image (↵ is recommended so you don't have to move your hands to reach the arrow keys)
 ←, or ↑: previous image
 ```
-or by clicking on any filename in the file list
+
+### Resetting keystroke matching
+If you make a typo, or change your mind when typing a class, you can either continue typing letters until
+there are no possible matches in the class list, or just hit `Esc`
 
 ### Deleting labels and classes
 Both labels and classes can be deleted by clicking items in their respective lists, then pressing the delete key.
