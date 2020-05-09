@@ -250,6 +250,14 @@ class MainWindow(MWBase, MWForm):
 
             self.statusbar.showMessage(self._labeler.get_keystrokes())
 
+    def _reset_matching(self):
+        """
+        Reset keystroke matching
+        """
+        if self._labeler:
+            self._labeler.reset_matching()
+            self.statusbar.clearMessage()
+
     def _key_pressed(self, e):
         """
         Perform actions based on key press
@@ -263,6 +271,8 @@ class MainWindow(MWBase, MWForm):
             self._next_img()
         elif key in [QtCore.Qt.Key_Left, QtCore.Qt.Key_Up]:
             self._prev_img()
+        elif key == QtCore.Qt.Key_Escape:
+            self._reset_matching()
         elif text.isalpha() or text.isspace():
             self._label_with_keystrokes(text)
 

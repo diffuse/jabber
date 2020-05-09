@@ -93,6 +93,11 @@ class LabelerTest(unittest.TestCase):
 
             self.assertEqual(last_result, expected)
 
+    def test_resetMatching_ResetsMatching(self):
+        self.labeler._keystrokes = ['foo', 'bar']
+        self.labeler.reset_matching()
+        self.assertEqual(len(self.labeler._keystrokes), 0)
+
     def test_deleteLabel_DeletesLabel(self):
         fname = 'foo.jpg'
         labels = {'bar', 'bar1'}

@@ -128,6 +128,12 @@ class Labeler:
 
         return ''
 
+    def reset_matching(self):
+        """
+        Clear the keystroke buffer to reset matching
+        """
+        self._keystrokes.clear()
+
     def delete_label(self, img_fname, label):
         """
         Delete a label associated with an image filename
