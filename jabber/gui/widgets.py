@@ -67,6 +67,12 @@ class ImageListWidget(gui.ImgListBase, gui.ImgListForm):
         """
         self.list.setCurrentRow(idx)
 
+    def clear(self):
+        """
+        Clear the list
+        """
+        self.list.clear()
+
     def _fname_selected(self, fname):
         """
         Signal for a filename being selected

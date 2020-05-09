@@ -59,6 +59,10 @@ class MainWindow(MWBase, MWForm):
             logger.warning('no path provided')
             return
 
+        # clear existing file list
+        self.fname_list.clear()
+        self._img_fnames.clear()
+
         # enforce trailing slash
         path = os.path.join(path, '')
 
