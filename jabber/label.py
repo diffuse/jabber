@@ -57,6 +57,13 @@ class Labeler:
         """
         return self._classes
 
+    def get_keystrokes(self):
+        """
+        Return a string of the keystrokes
+        currently in the buffer
+        """
+        return ''.join(self._keystrokes)
+
     def add_label(self, img_fname, label):
         """
         Associate a label with an image filename

@@ -248,6 +248,8 @@ class MainWindow(MWBase, MWForm):
             if match:
                 self._add_label(match)
 
+            self.statusbar.showMessage(self._labeler.get_keystrokes())
+
     def _key_pressed(self, e):
         """
         Perform actions based on key press
