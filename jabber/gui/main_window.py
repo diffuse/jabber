@@ -158,6 +158,7 @@ class MainWindow(MWBase, MWForm):
 
             if self._labeler:
                 self._labeler.delete_label(img_fname, label)
+                self._labeler.save()
         except IndexError:
             pass
 
@@ -169,6 +170,7 @@ class MainWindow(MWBase, MWForm):
         """
         if self._labeler:
             self._labeler.delete_class(class_name)
+            self._labeler.save()
             self._refresh_classes()
 
     def _refresh_classes(self):
