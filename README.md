@@ -1,6 +1,8 @@
 # jabber
 Label single or multiclass data with minimal keystrokes
 
+![alt text](docs/images/jabber-small.gif)
+
 ### Prerequisites
 You need Python >= 3.6 and PyQt5 to run jabber
 

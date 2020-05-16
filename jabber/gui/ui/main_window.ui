@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>957</width>
-    <height>668</height>
+    <width>1269</width>
+    <height>910</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,11 @@
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="8,2">
       <item>
        <widget class="QGroupBox" name="groupBox_2">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="title">
          <string>Image</string>
         </property>
@@ -43,6 +48,11 @@
       </item>
       <item>
        <widget class="QGroupBox" name="groupBox_3">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="title">
          <string>File list</string>
         </property>
@@ -71,6 +81,11 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="4,4">
       <item>
        <widget class="QGroupBox" name="groupBox_4">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="title">
          <string>Current labels</string>
         </property>
@@ -95,6 +110,11 @@
       </item>
       <item>
        <widget class="QGroupBox" name="groupBox_5">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="title">
          <string>Classes</string>
         </property>
@@ -142,8 +162,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>957</width>
-     <height>20</height>
+     <width>1269</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
