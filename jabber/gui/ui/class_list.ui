@@ -28,6 +28,11 @@
    </property>
    <item>
     <widget class="QListWidget" name="list">
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
      <property name="sortingEnabled">
       <bool>true</bool>
      </property>
